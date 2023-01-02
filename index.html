@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Todo List</title>
+    <style>
+        body{
+            display: flex;
+            justify-content: center;
+            background-image: url("desk.jpg");
+            overflow: hidden;
+        }
+        #container{
+            height: 500px;
+            width: 300px;
+            background-image:url("notepad.jpg");
+            background-size:300px 500px;
+            background-repeat: no-repeat;
+            display: flex;
+            justify-content: center;
+        }
+        input[type="text"], textarea {
+            margin-top: 15px;;
+            background-color:rgb(229, 195, 206);
+
+        }
+        .delete-button {
+            height: 20px;
+            width: 20px;
+        }
+
+        .delete-button img {
+            height: 100%;
+            width: 100%;
+          }
+    </style>
+  </head>
+
+<body onload="updateListOnLoad()">
+<div id="container">
+    <div id="textDiv">
+<h1 style="color: green;">Todo List</h1><br><br>
+    <form class="" action="index.html" method="post">
+        <input id="todoInput" type="text" name="todo" value="" required/>
+    <button type="button" id="inputButton" name="button" onclick="updateList()">Submit</button>
+    </form>
+<p id="todo"></p>
+</div>
+</div>
+<script type="text/javascript">
+
+inputArray =[];
+var todoNum = 0;
+function updateList() {
+  var input = document.getElementById("todoInput");
+  if (input !== null && input !== undefined){
+    var inputValue = input.value;
+    // Check if the input value is not an empty string
+    if (inputValue.trim() !== "") {
+      document.getElementById("todo").innerHTML = "";
+      inputArray.push(inputValue);
+      // Use the length of the inputArray array to store the todo list item in the local storage
+      localStorage.setItem(inputArray.length - 1, inputValue);
+      //document.getElementById("todo").innerHTML = k;
+      document.getElementById("todoInput").value = "";
+      for (i=0; i<inputArray.length; i++){
+       if (inputArray[i] != null) {
+          document.getElementById("todo").innerHTML += '<div id="todo' + i + '">' + localStorage.getItem(i) + '<button type="button" class="delete-button" onclick="deleteTodo(' + i + ')"><img src="trash.png" alt="Delete"></button></div><br />';
+          console.log(inputArray[i]);
+        }
+      }
+    }
+  }
+}
+function updateListOnLoad() {
+  let i = 0;
+    while (localStorage.getItem(i) !== undefined && localStorage.getItem(i) !== null) {
+      inputArray[i] = localStorage.getItem(i);
+      console.log(inputArray[i]);
+      // Add the todo list entry and a delete button to the page
+      document.getElementById("todo").innerHTML += '<div id="todo' + i + '">' + inputArray[i] + '<button type="button" class="delete-button" onclick="deleteTodo(' + i + ')"><img src="trash.png" alt="Delete"></button></div><br />';
+      i++;
+  }
+}
+function updateListOnDelete() {
+  let i = 0;
+  document.getElementById("todo").innerhtml = "";
+    while (localStorage.getItem(i) !== undefined && localStorage.getItem(i) !== null) {
+      inputArray[i] = localStorage.getItem(i);
+      console.log(inputArray[i]);
+      // Add the todo list entry and a delete button to the page
+      document.getElementById("todo").innerHTML += '<div id="todo' + i + '">' + inputArray[i] + '<button type="button" class="delete-button" onclick="deleteTodo(' + i + ')"><img src="trash.png" alt="Delete"></button></div><br />';
+      i++;
+    if(inputArray.length < 1){
+      localstorage.clear();
+    }
+  }
+}
+
+function deleteTodo(index) {
+  localStorage.clear();
+  // Remove the todo list entry from the page
+  var todoDiv = document.getElementById("todo" + index);
+  todoDiv.parentNode.removeChild(todoDiv);
+  // Remove the todo list entry from the inputArray array
+  inputArray.splice(index, 1);
+  //inputArray = inputArray.slice(-1);
+  // Update the local storage with the new list of todo list items
+  for (i = 0; i < inputArray.length; i++) {
+    localStorage.setItem(i, inputArray[i]);
+  }
+  document.getElementById("todo").innerHTML = "";
+  updateListOnLoad();
+}
+  // Execute a function when the user presses a key on the keyboard
+    todoInput.addEventListener("keypress", function(event) {
+  // If the user presses the "Enter" key on the keyboard
+  if (event.key === "Enter") {
+  // Cancel the default action, if needed
+    event.preventDefault();
+  // Trigger the button element with a click
+    document.getElementById("inputButton").click()
+  }
+});
+</script>
+</body>
+</html>
